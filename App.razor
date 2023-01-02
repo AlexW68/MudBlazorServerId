@@ -1,0 +1,239 @@
+﻿@inject MudBlazorTheme AppState;
+@inject NavigationManager navManager;
+@using MudBlazorServerId.Pages.Identity
+
+<MudThemeProvider @ref="@_mudThemeProvider" Theme="MyTheme" @bind-IsDarkMode="@_isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <RedirectToLogin />
+                </NotAuthorized>
+            </AuthorizeRouteView>
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+@code {
+    private bool _isDarkMode = false;
+    private MudThemeProvider _mudThemeProvider;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+//            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            StateHasChanged();
+        }
+//        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        AppState.CompanyName = "Default Company";
+        AppState.DialogTitle = "Default Company";
+        AppState.DeleteDialogTitle = "Default Company Delete Confirmation";
+        AppState.PageHeader = Typo.h4;
+        AppState.MudVariant = Variant.Outlined;
+        AppState.MudButtonVariant = Variant.Filled;
+        AppState.MudFieldVariant = Variant.Outlined;
+        //        AppState.MudFieldVariant = Variant.Filled;
+        AppState.MudDarkSearchVariant = Variant.Filled;
+        AppState.MudNoteLines = 5;
+        AppState.MudBigNoteLines = 10;
+        AppState.MudAdornment = Adornment.End;
+
+        AppState.MudMenuMargin = Margin.Dense;
+        AppState.MudMenuColour = Color.Primary;
+
+        AppState.MudDense = true;
+        AppState.MudSize = Size.Small;
+        AppState.MudIconSize = Size.Small;
+        AppState.MudAddIconSize = Size.Large;
+        AppState.MudImmediate = true;
+        AppState.MudCardElevation = 25;
+        AppState.MudCardSquare = true;
+        AppState.MudNoteExpanded = true;
+        AppState.DateFormat = "dd/MM/yyyy";
+        AppState.TimeFormat = "hh:mm";
+        AppState.DateTimeFormat = "hh:mm dd/MM/yyyy";
+        AppState.MudCultureInfo = System.Globalization.CultureInfo.CurrentCulture;
+        AppState.MudDisableUnderline = false;
+    }
+
+
+    public MudTheme MyTheme = new MudTheme()
+        {
+            // all themes start with a single colour,
+            // https://m3.material.io/theme-builder#/custom
+            // use the single colour for the primary colour
+            // set the figures below for Primary, Secondary and Tertiary
+            // https://hslpicker.com/#ff8000 to get the HSL figures
+
+
+            Palette = new Palette()
+            {
+                Primary = "#0062a1",
+                AppbarBackground = "#0062a1",
+                TextPrimary = "#424242",
+                Secondary = "#525f70",
+                TextSecondary = "rgba(0,0,0, 0.54)",
+                Tertiary = "#6a5779",
+
+                Black = "#000000",
+                White = "#FFFFFF",
+                Info = "#2196F3",
+                Success = "#00C853",
+                Warning = "#FF9800",
+                Error = "#ba1a1a",
+                Dark = "#424242",
+                TextDisabled = "rgba(0,0,0, 0.38)",
+                ActionDefault = "#FFFFFF",
+                ActionDisabled = "rgba(0,0,0, 0.26)",
+                ActionDisabledBackground = "rgba(0,0,0, 0.12)",
+                Background = "#FFFFFF",
+                BackgroundGrey = "#F5F5F5",
+                Surface = "#FFFFFF",
+                DrawerBackground = "#FFFFFF",
+                DrawerText = "#424242",
+                DrawerIcon = "#616161",
+
+                AppbarText = "#FFFFFF",
+                LinesDefault = "rgba(0,0,0, 0.12)",
+                LinesInputs = "#BDBDBD",
+                Divider = "#E0E0E0",
+                DividerLight = "rgba(0,0,0, 0.8)",
+                HoverOpacity = 0.06,
+                GrayDefault = "#9E9E9E",
+                GrayLight = "#BDBDBD",
+                GrayLighter = "#E0E0E0",
+                GrayDark = "#757575",
+                GrayDarker = "#616161"
+            },
+
+            Typography = new Typography()
+            {
+
+                Default = new Default()
+                {
+                    FontFamily = new[] { "Open Sans", "Helvetica", "Arial", "sans-serif" },
+                    FontSize = "1rem",
+                    FontWeight = 500,
+                    LineHeight = 1.6,
+                    LetterSpacing = ".0075em"
+                },
+                H6 = new H6()
+                {
+                    FontFamily = new[] { "Open Sans", "Helvetica", "Arial", "sans-serif" },
+                    FontSize = "0.75rem",
+                    FontWeight = 500,
+                    LineHeight = 1.6,
+                    LetterSpacing = ".0075em"
+                },
+                Caption = new Caption()
+                {
+                    FontFamily = new[] { "Open Sans", "Helvetica", "Arial", "sans-serif" },
+                    FontSize = "0.75rem",
+                    FontWeight = 500,
+                    LineHeight = 1.6,
+                    LetterSpacing = ".0075em"
+                }
+
+            }
+
+        };
+
+
+    public MudTheme LightTheme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                //Primary = "#0a0a1a",
+                Primary = "#82a3cb",
+                //Primary = "#5e35b1",
+                AppbarBackground = "#ffffff",
+                //                AppbarBackground = "#00073d",
+                //AppbarBackground = "#0a0a1a",
+                TextPrimary = "#424242",
+                //TextPrimary = "#f2f2f2",
+                Secondary = "#3d3600",
+                //Secondary = "#800006",
+                TextSecondary = "rgba(0,0,0, 0.54)",
+                Tertiary = "#1EC8A5",
+
+                Black = "#000000",
+                White = "#FFFFFF",
+                Info = "#2196F3",
+                Success = "#00C853",
+                Warning = "#FF9800",
+                Error = "#F44336",
+                Dark = "#424242",
+                TextDisabled = "rgba(0,0,0, 0.38)",
+                ActionDefault = "#FFFFFF",
+                //ActionDefault = "rgba(0,0,0, 0.54)",
+                ActionDisabled = "rgba(0,0,0, 0.26)",
+                ActionDisabledBackground = "rgba(0,0,0, 0.12)",
+                Background = "#FFFFFF",
+                BackgroundGrey = "#F5F5F5",
+                Surface = "#FFFFFF",
+                DrawerBackground = "#FFFFFF",
+                DrawerText = "#424242",
+                DrawerIcon = "#616161",
+
+                AppbarText = "#FFFFFF",
+                LinesDefault = "rgba(0,0,0, 0.12)",
+                LinesInputs = "#BDBDBD",
+                Divider = "#E0E0E0",
+                DividerLight = "rgba(0,0,0, 0.8)",
+                HoverOpacity = 0.06,
+                GrayDefault = "#9E9E9E",
+                GrayLight = "#BDBDBD",
+                GrayLighter = "#E0E0E0",
+                GrayDark = "#757575",
+                GrayDarker = "#616161"
+            },
+
+            Typography = new Typography()
+            {
+
+                Default = new Default()
+                {
+                    FontFamily = new[] { "Open Sans", "Helvetica", "Arial", "sans-serif" },
+                    FontSize = "1rem",
+                    FontWeight = 500,
+                    LineHeight = 1.6,
+                    LetterSpacing = ".0075em"
+                },
+                H6 = new H6()
+                {
+                    FontFamily = new[] { "Open Sans", "Helvetica", "Arial", "sans-serif" },
+                    FontSize = "0.75rem",
+                    FontWeight = 500,
+                    LineHeight = 1.6,
+                    LetterSpacing = ".0075em"
+                },
+                Caption = new Caption()
+                {
+                    FontFamily = new[] { "Open Sans", "Helvetica", "Arial", "sans-serif" },
+                    FontSize = "0.75rem",
+                    FontWeight = 500,
+                    LineHeight = 1.6,
+                    LetterSpacing = ".0075em"
+                }
+
+            }
+
+        };
+
+}

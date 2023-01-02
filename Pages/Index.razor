@@ -1,0 +1,55 @@
+﻿@page "/"
+@layout MainLayout
+@attribute [AllowAnonymous]
+@inject MudBlazorTheme appState;
+@inject NavigationManager navManager;
+@using MudBlazorServerId.Pages.Identity
+
+<MudPaper Elevation="4" Class="py-8 px-10 mb-6">
+    <MudText Typo=@appState.PageHeader Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><b>MudBlazor Demo Server Application</b></MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><b>I am a big fan of MudBlazor, MudBlazor takes away a lot of the dseign issues I have with layout etc. But getting a Blazor App to work what I consider propertly with 100% Blazor components is not straight forward, this project has all the information needed to get Indentity working properly with Blazor components. </b></MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">What Microsoft will tell you is that is ok to mix razor and Blazor pages together, whilst this works this does not give you a consistent look at feel without a lot of work as you will have to break out to standard HTML for styling of pages like the Login page, all possible but messy in my opinion.</MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">Where you end up if you want to use the Sign In Manager within a Blazor Page is the following error.</MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Error" Align="MudBlazor.Align.Center">System.InvalidOperationException: 'The response headers cannot be modified because the response has already started.'</MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">You are not going to solve this issue simply, left with 4 choices, 1. scaffold out a bunch of cshtml pages, style them to look like the Blazor components, good luck with that and the maintenence issues that brings along. 2. Roll your own security system, this is a bigger issue than it looks, not a great idea. 3. Use MFA/Azure for logins, great if all your logins are internal what are you going to do about people what want to login without an Azure account?. 4. Use this solution. There are other ways to solve this issue, some will cost money, some will be complex to setup, in my humble opinion this solution is the cheapest,easiest way to go.</MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">Here is a bunch of links describing the issue.</MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><a href="https://stackoverflow.com/questions/68266102/system-invalidoperationexception-the-response-headers-cannot-be-modified-becau">Link1</a></MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><a href="https://social.msdn.microsoft.com/Forums/en-US/6d66da76-2c35-41bd-a4cb-46cd1f92020f/the-response-headers-cannot-be-modified-because-the-response-has-already-started?forum=aspblazor">Link2</a></MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">This next link is particulary telling, Microsoft tech guys saying they are happy with what is already there so roll your own if you want something different </MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><a href="https://github.com/dotnet/aspnetcore/issues/19148">Link3</a></MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><a href="https://stackoverflow.com/questions/56781790/server-side-blazor-asp-net-identity-signinasync-error-the-response-headers-can">Link4</a></MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">My issue with all of the above is this, Microsoft want developers to adopt Blazor, it's a great product, until you hit issues like this, this will turn potential developers away, once they have spent days trying to get this to work, Authentication, Indentification is at the core are almost every application I write, this issue makes for a messy solution.</MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><a href="https://github.com/dotnet/aspnetcore/issues/13601">Link6</a></MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">Buried in the post above was the solution I ended up using, it works and works well, I am not taking credit for this solution </MudText>
+    <br />
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><a href="https://github.com/MarcoTheFirst">MarcoTheFirst posted a zip file which has the solition in it, which is the basis of this project, all I have done is added MudBlazor, upgraded the project to .Net7 and added a bunch of forms.</a></MudText>
+    <br/>
+    <MudGrid Justify="Justify.Center" Spacing="2">
+        <MudItem>
+            <MudButton StartIcon="@Icons.Filled.Login" OnClick="@LoginClicked" Variant=@appState.MudButtonVariant Color="MudBlazor.Color.Primary">Login</MudButton>
+        </MudItem>
+    </MudGrid>
+
+</MudPaper>
+
+@code {
+
+    private void LoginClicked()
+    {
+        navManager.NavigateTo("/login/");
+    }
+}

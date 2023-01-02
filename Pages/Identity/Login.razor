@@ -1,0 +1,80 @@
+﻿@page "/login"
+@layout LoginLayout
+@attribute [AllowAnonymous]
+@inject SignInManager<IdentityUser> signInManager
+@inject UserManager<IdentityUser> userManager
+@inject NavigationManager navManager;
+@inject MudBlazorTheme appState;
+
+<MudPaper Elevation="5" Class="pa-16 ma-2">
+    <MudText Typo=@appState.PageHeader Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><b>Login</b></MudText>
+    <br />
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12" sm="9">
+            <MudTextField T="string" Label="UserName" @bind-Value=@Model.Email Variant=@appState.MudFieldVariant></MudTextField>
+        </MudItem>
+    </MudGrid>
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12" sm="9">
+            <MudTextField T="string" Label="Password" @bind-Value=@Model.Password Variant=@appState.MudFieldVariant></MudTextField>
+        </MudItem>
+    </MudGrid>
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><b>User login User@test.com, Password Test.1234 </b></MudText>
+    <MudText Typo=@appState.NormalText Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><b>Admin login Admin@test.com, Password Test.1234 </b></MudText>
+    @if (@Model.Error != null)
+    {
+        <MudGrid Class="align-self-center">
+            <MudItem xs="12" sm="12">
+                <MudField T="string" Variant=@appState.MudFieldVariant>@Model.Error</MudField>
+            </MudItem>
+        </MudGrid>
+    }
+    <br/>
+    <MudGrid Justify="Justify.Center" Spacing="2">
+        <MudItem>
+            <MudButton StartIcon="@Icons.Filled.Login" OnClick="@LoginClicked" ButtonType="ButtonType.Submit" Variant=@appState.MudButtonVariant Color="MudBlazor.Color.Primary">Login</MudButton>
+        </MudItem>
+    </MudGrid>
+    <br/>
+</MudPaper>
+
+@code {
+
+    private LoginModel<IdentityUser> Model { get; set; } = new LoginModel<IdentityUser>();
+
+    protected override void OnInitialized()
+    {
+        Model.Error = null;
+        Model.Email = "user@test.com";
+        Model.Password = "Test.1234";
+    }
+
+    private async void LoginClicked()
+    {
+        var usr = await userManager.FindByEmailAsync(Model.Email);
+        if (usr == null)
+        {
+            Model.Error = "Login failed. Check your username and password.";
+            return;
+        }
+
+        if (await signInManager.CanSignInAsync(usr))
+        {
+            var result = await signInManager.CheckPasswordSignInAsync(usr, Model.Password, true);
+            if (result.Succeeded)
+            {
+                Guid key = BlazorCookieLoginMiddleware<IdentityUser>.AnnounceLogin(Model);
+                navManager.NavigateTo($"/login?key={key}", true);
+                // navManager.NavigateTo($"/claims/",true);
+            }
+            else
+            {
+                Model.Error = "Login failed. Check your username and password.";
+            }
+        }
+        else
+        {
+            Model.Error = "Your account is blocked";
+        }
+    }
+}

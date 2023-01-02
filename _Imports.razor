@@ -1,0 +1,16 @@
+﻿@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Identity
+@using MudBlazor
+@using MudBlazorServerId
+@using MudBlazorServerId.Shared
+@using MudBlazorServerId.IdentityUtils
+@using MudBlazorServerId.Helpers;
+@using MudBlazorServerId.Pages.Identity
+@*Ensure that all views are protected by default:*@
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]

@@ -1,0 +1,130 @@
+﻿@page "/claims"
+@layout MainLayout
+@attribute [AllowAnonymous]
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject MudBlazorTheme appState
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject NavigationManager navManager;
+
+
+<MudGrid Justify="Justify.Center" Spacing="2">
+    <MudItem>
+        <MudButton StartIcon="@Icons.Filled.AdminPanelSettings" OnClick="@AdminClicked" ButtonType="ButtonType.Submit" Variant=@appState.MudButtonVariant Color="MudBlazor.Color.Primary">Admin View</MudButton>
+        <MudButton StartIcon="@Icons.Filled.VerifiedUser" OnClick="@UserClicked" ButtonType="ButtonType.Submit" Variant=@appState.MudButtonVariant Color="MudBlazor.Color.Primary">User View</MudButton>
+    </MudItem>
+</MudGrid>
+<br />
+
+
+<MudContainer Class="pt-4 mt-16 px-10">
+    <MudPaper Elevation="5" Class="py-8 px-10">
+        <MudText Typo=@appState.PageHeader Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><b>User Security Claims</b></MudText>
+        <AuthorizeView>
+            <Authorized>
+                @if (context.User.Identity != null)
+                {
+                    <MudText Typo=@appState.SubHeader Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">@context.User.Identity.Name</MudText>
+                    foreach (var claim in context.User.Claims)
+                    {
+                        <MudGrid>
+                            <MudItem xs="12" sm="6">
+                                <MudField Label="Type" Variant="Variant.Outlined">@claim.Type</MudField>
+                            </MudItem>
+                            <MudItem xs="12" sm="6">
+                                <MudField Label="Value" Variant="Variant.Outlined">@claim.Value</MudField>
+                            </MudItem>
+                        </MudGrid>
+                    }
+                }
+            </Authorized>
+        </AuthorizeView>
+    </MudPaper>
+</MudContainer>
+
+<MudContainer Class="pt-1 mt-1 px-10">
+    <MudPaper Elevation="5" Class="py-8 px-10">
+        <MudText Typo=@appState.PageHeader Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><b>Authentication State</b></MudText>
+        <AuthorizeView>
+            <Authorized>
+                @if (_authenticationStateUser != null && _authenticationStateUser.Identity != null)
+                {
+                    <MudText Typo=@appState.SubHeader Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">@context.User.Identity.Name</MudText>
+                    @if (_authenticationStateUser != null)
+                    {
+                        @foreach (var claim in _authenticationStateUser.Claims)
+                        {
+                            <MudGrid>
+                                <MudItem xs="12" sm="6">
+                                    <MudField Label="Type" Variant=" Variant.Outlined">@claim.Type</MudField>
+                                </MudItem>
+                                <MudItem xs="12" sm="6">
+                                    <MudField Label="Value" Variant="Variant.Outlined">@claim.Value</MudField>
+                                </MudItem>
+                            </MudGrid>
+                        }
+
+                    }
+                }
+            </Authorized>
+        </AuthorizeView>
+    </MudPaper>
+</MudContainer>
+
+<MudContainer Class="pt-1 mt-1 px-10">
+    <MudPaper Elevation="5" Class="py-8 px-10">
+        <MudText Typo=@appState.PageHeader Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center"><b>Authentication State Provider</b></MudText>
+        <AuthorizeView>
+            <Authorized>
+                @if (@_authenticationStateProviderUser != null && @_authenticationStateProviderUser.Identity != null)
+                {
+                    <MudText Typo=@appState.SubHeader Color="MudBlazor.Color.Primary" Align="MudBlazor.Align.Center">@context.User.Identity.Name</MudText>
+                    @foreach (var claim in _authenticationStateProviderUser.Claims)
+                    {
+                        <MudGrid>
+                            <MudItem xs="12" sm="6">
+                                <MudField Label="Type" Variant=" Variant.Outlined">@claim.Type</MudField>
+                            </MudItem>
+                            <MudItem xs="12" sm="6">
+                                <MudField Label="Value" Variant="     Variant.Outlined">@claim.Value</MudField>
+                            </MudItem>
+                        </MudGrid>
+                    }
+                }
+            </Authorized>
+        </AuthorizeView>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? _authenticationStateTask { get; set; }
+
+    private ClaimsPrincipal? _authenticationStateUser { get; set; }
+    private ClaimsPrincipal? _authenticationStateProviderUser { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        AuthenticationState authenticationState;
+
+        if (_authenticationStateTask != null)
+        {
+            authenticationState = await _authenticationStateTask;
+            _authenticationStateUser = authenticationState.User;
+        }
+
+        authenticationState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        _authenticationStateProviderUser = authenticationState.User;
+    }
+
+    private void AdminClicked()
+    {
+        navManager.NavigateTo("/adminonly");
+    }
+
+    private void UserClicked()
+    {
+        navManager.NavigateTo("/adminonly");
+    }
+
+}

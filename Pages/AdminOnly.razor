@@ -1,0 +1,23 @@
+﻿@page "/adminonly"
+
+@using Microsoft.AspNetCore.Authorization
+@*@attribute [Authorize(Roles ="AdminRole")]*@
+
+<h3>AdminOnly</h3>
+
+
+<AuthorizeView Roles="AdminRole">
+    <Authorized>
+        <p>good</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>bad</p>
+        <RedirectToLogin />
+    </NotAuthorized>
+
+</AuthorizeView>
+
+
+@code {
+
+}
